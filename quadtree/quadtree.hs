@@ -6,7 +6,7 @@ main = interact driver
 driver:: String -> String
 driver file =
     let strLines = lines file
-        newList = drop 1 strLines --take 1 strLines
+        newList = drop 1 strLines
         tcs = readFiler newList []
     in (printQuad tcs [])
 
