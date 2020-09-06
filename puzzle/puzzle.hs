@@ -12,8 +12,7 @@ data Puzzle = Puzzle{
     order::[Piece]
 } deriving (Show)
 
-data BSTree k v =
-   Empty | Node k v (BSTree k v) (BSTree k v)
+
 
 main::IO()
 main = interact driver
