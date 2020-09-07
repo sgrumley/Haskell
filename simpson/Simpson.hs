@@ -1,72 +1,54 @@
 
 module Simpson(
-    integrate,
     points,
     driver
 ) where
    
--- Name general functions as Func
 type Func = Double -> Double
-
-rev :: [Double] -> [Double]
-rev [] = []
-rev (a:x) = rev x ++ [a]
 
 driver:: Func -> Double -> Double -> Int -> Double 
 driver f a b n =
     let h = calcH a b n
-        p = points a b h []
-       -- pr = rev p
+        p = points f a b h []
         res = calculateHandler f p n 0 0.0 h
-
     in res
 
-integrate:: Func -> Double -> Double -> Int -> Double 
-integrate f a b n = 
-    let h = calcH a b n
-    in h * (f a + 4 * f a + f b)/3 
-
-
+-- Calculate step value
 calcH:: Double -> Double -> Int -> Double
 calcH a b n = (b - a) / (fromIntegral n)
 
-
-points  ::  Double -> Double -> Double -> [Double] -> [Double]
-points  a b h res
-    | b <= a = (res ++ [b])
+-- Get the f(x) of all step values and add to list
+points  :: Func -> Double -> Double -> Double -> [Double] -> [Double]
+points f a b h res
+    | b <= a = (res ++ [(f a)])
     | otherwise =
-        let i = b - h
-        in points a i h (res ++ [b])
+        let i = a + h
+            value = f a
+        in points f i b h (res ++ [value])
 
--- points  :: Func -> Double -> Double -> Double -> [Double] -> [Double]
--- points f a b h res
---     | b <= a = (res ++ [b])
---     | otherwise =
---         let i = a + h--(fromIntegral n)
---             value = f a
---         in points f i b h (res ++ [value])
-
+-- final handling after everything has been summed
 calculateHandler :: Func -> [Double] -> Int -> Int -> Double -> Double -> Double
 calculateHandler f points n iter res h = ((calculate f points n iter res h) * h) / 3
 
+-- for each odd value times f(x) by 4 else * 2
 calculate :: Func -> [Double] -> Int -> Int -> Double -> Double -> Double
 calculate f points n iter res h
     | iter == 0 =
-        let fx = f (points!!iter) 
+        let fx = points!!iter
         in calculate f points n (iter + 1) (res + fx) h
 
     | iter >=  n = 
-        let fx = f (points!!iter)          
+        let fx = points!!iter          
         in res + fx 
 
     | iter `mod` 2 /= 0 = 
-        let fx = f (points!!iter)
+        let fx = points!!iter
             r = 4 * fx
         in calculate f points n (iter + 1) (res + r) h
 
     | iter `mod` 2 == 0 = 
-        let fx = f (points!!iter)
-            r = fx * 2--2 * fx
+        let fx = points!!iter
+            r = fx * 2
         in calculate f points n (iter + 1) (res + r) h
     
     | otherwise = res 

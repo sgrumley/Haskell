@@ -1,22 +1,14 @@
+module Main (main) where 
 import Simpson
 
 myFunc :: Double -> Double
 myFunc = \x -> x*x 
 
-printD:: [Double] -> String -> String
-printD [] s = s
-printD listD s = 
-  let h = head listD
-      nl = drop 1 listD
-  in printD nl (s ++ " " ++ (show h))
+main::IO()
+main = interact drivers
 
-calcH:: Double -> Double -> Int -> Double
-calcH a b n = (b - a) / (fromIntegral n)
-
-main :: IO ()
-main =
-  let result = Simpson.integrate myFunc 1.0 2.0 100
-      test = Simpson.points  1.0 10.0 (calcH 1.0 10.0 10) []
-      testFull = Simpson.driver myFunc 4.0 10.0 2
-      tester = printD test "" 
-  in putStrLn $ show testFull
+drivers:: String -> String
+drivers file =
+  -- pass func, lowerbound, upperbound, n
+  let result = Simpson.driver myFunc 2.0 8.0 3
+  in (show result) ++ "\n" 
