@@ -15,7 +15,7 @@ parseQTtoValue :: String -> Int -> Int -> (Int, String)
 parseQTtoValue ('e' : cs) d v = (v, cs) 
 parseQTtoValue ('f' : cs) d v = (v + (1024 `div` (4 ^ d)) , cs)
 parseQTtoValue ('p' : cs) d v = 
-    let (st1, cs1) = parseQTtoValue cs (d + 1) v
+    let (st1, cs1) = parseQTtoValue cs (d + 1)  v
         (st2, cs2) = parseQTtoValue cs1 (d + 1) v
         (st3, cs3) = parseQTtoValue cs2 (d + 1) v
         (st4, cs4) = parseQTtoValue cs3 (d + 1) v
